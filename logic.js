@@ -1,59 +1,60 @@
-const N = 3;
-const DEF = [[2,1,-1,8],[-3,-1,2,-11],[-2,1,2,-3]];
+const TAMANHO = 3;
+const MATRIZ_PADRAO = [[2,1,-1,8],[-3,-1,2,-11],[-2,1,2,-3]];
 
-function init() {
-  const g = document.getElementById('grid');
-  g.innerHTML = '';
-  for (let i = 0; i < N; i++) {
-    const row = document.createElement('div');
-    row.style.marginBottom = '4px';
-    for (let j = 0; j <= N; j++) {
-      if (j === N) row.innerHTML += '<label> = </label>';
-      const inp = document.createElement('input');
-      inp.type = 'number'; inp.id = `m${i}${j}`; inp.value = DEF[i][j];
-      row.appendChild(inp);
+function inicializar() {
+  const grade = document.getElementById('grid');
+  grade.innerHTML = '';
+  for (let linha = 0; linha < TAMANHO; linha++) {
+    const divLinha = document.createElement('div');
+    divLinha.style.marginBottom = '4px';
+    for (let coluna = 0; coluna <= TAMANHO; coluna++) {
+      if (coluna === TAMANHO) divLinha.innerHTML += '<label> = </label>';
+      const campo = document.createElement('input');
+      campo.type = 'number'; campo.id = `m${linha}${coluna}`; campo.value = MATRIZ_PADRAO[linha][coluna];
+      divLinha.appendChild(campo);
     }
-    g.appendChild(row);
+    grade.appendChild(divLinha);
   }
   document.getElementById('out').innerHTML = '';
 }
 
-function get() {
-  return Array.from({length: N}, (_, i) =>
-    Array.from({length: N+1}, (_, j) => +document.getElementById(`m${i}${j}`).value)
+function lerMatriz() {
+  return Array.from({length: TAMANHO}, (_, linha) =>
+    Array.from({length: TAMANHO+1}, (_, coluna) => +document.getElementById(`m${linha}${coluna}`).value)
   );
 }
 
-function fmt(m) {
-  return m.map(r => '[ ' + r.map(v => v.toFixed(2).padStart(7)).join('  ') + ' ]').join('\n');
+function formatarMatriz(matriz) {
+  return matriz.map(linha => '[ ' + linha.map(valor => valor.toFixed(2).padStart(7)).join('  ') + ' ]').join('\n');
 }
 
-function solve() {
-  const m = get(), steps = [];
-  steps.push('Matriz inicial:\n' + fmt(m));
+function resolver() {
+  const matriz = lerMatriz(), passos = [];
+  passos.push('Matriz inicial:\n' + formatarMatriz(matriz));
 
-  for (let col = 0; col < N; col++) {
-    let p = col;
-    for (let r = col+1; r < N; r++) if (Math.abs(m[r][col]) > Math.abs(m[p][col])) p = r;
-    if (p !== col) { [m[col], m[p]] = [m[p], m[col]]; steps.push(`Troca L${col+1} ↔ L${p+1}:\n` + fmt(m)); }
+  for (let coluna = 0; coluna < TAMANHO; coluna++) {
+    let linhaPivo = coluna;
+    for (let linha = coluna+1; linha < TAMANHO; linha++) if (Math.abs(matriz[linha][coluna]) > Math.abs(matriz[linhaPivo][coluna])) linhaPivo = linha;
+    if (linhaPivo !== coluna) { [matriz[coluna], matriz[linhaPivo]] = [matriz[linhaPivo], matriz[coluna]]; passos.push(`Troca L${coluna+1} ↔ L${linhaPivo+1}:\n` + formatarMatriz(matriz)); }
 
-    for (let r = col+1; r < N; r++) {
-      const f = m[r][col] / m[col][col];
-      for (let c = col; c <= N; c++) m[r][c] -= f * m[col][c];
-      steps.push(`L${r+1} ← L${r+1} - (${f.toFixed(2)})·L${col+1}:\n` + fmt(m));
+    for (let linha = coluna+1; linha < TAMANHO; linha++) {
+      const fator = matriz[linha][coluna] / matriz[coluna][coluna];
+      for (let c = coluna; c <= TAMANHO; c++) matriz[linha][c] -= fator * matriz[coluna][c];
+      passos.push(`L${linha+1} ← L${linha+1} - (${fator.toFixed(2)})·L${coluna+1}:\n` + formatarMatriz(matriz));
     }
   }
 
-  const x = Array(N).fill(0);
-  for (let i = N-1; i >= 0; i--) {
-    x[i] = m[i][N];
-    for (let j = i+1; j < N; j++) x[i] -= m[i][j] * x[j];
-    x[i] /= m[i][i];
+  const solucao = Array(TAMANHO).fill(0);
+  for (let i = TAMANHO-1; i >= 0; i--) {
+    solucao[i] = matriz[i][TAMANHO];
+    for (let j = i+1; j < TAMANHO; j++) solucao[i] -= matriz[i][j] * solucao[j];
+    solucao[i] /= matriz[i][i];
   }
 
+  const nomes = ['x', 'y', 'z'];
   document.getElementById('out').innerHTML =
-    steps.map(s => `<div class="step">${s}</div>`).join('') +
-    `<div class="sol">Solução: x₁ = ${x[0].toFixed(4)} &nbsp; x₂ = ${x[1].toFixed(4)} &nbsp; x₃ = ${x[2].toFixed(4)}</div>`;
+    passos.map(passo => `<div class="step">${passo}</div>`).join('') +
+    `<div class="sol">Solução: ${nomes.map((nome, i) => `${nome} = ${solucao[i].toFixed(4)}`).join(' &nbsp; ')}</div>`;
 }
 
-init();
+inicializar();
