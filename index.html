@@ -2,16 +2,18 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eliminação de Gauss</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h2>Eliminação de Gauss — Sistema 3×3</h2>
-  <p>Preencha os coeficientes e clique em <b>Resolver</b>.</p>
+  <p>Edite os coeficientes [A | b] e clique em <b>Resolver</b>.</p>
   <div id="grid"></div>
-  <br>
-  <button onclick="resolver()">▶ Resolver</button>
-  <button onclick="inicializar()">↺ Resetar</button>
+  <div class="botoes">
+    <button onclick="resolver()">▶ Resolver</button>
+    <button onclick="inicializar()">↺ Resetar</button>
+  </div>
   <div id="out"></div>
   <script src="logic.js"></script>
 </body>

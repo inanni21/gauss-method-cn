@@ -1,55 +1,100 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: monospace;
   background: #f0f8ff;
   color: #1a1a2e;
-  padding: 20px;
+  padding: clamp(12px, 4vw, 32px);
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-h2 { color: #1565c0; }
+h2 {
+  color: #1565c0;
+  font-size: clamp(15px, 3.5vw, 22px);
+  margin-bottom: 6px;
+}
 
-p { font-size: 13px; color: #555; }
+p {
+  font-size: clamp(11px, 2.5vw, 13px);
+  color: #555;
+}
+
+#grid div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+}
 
 input[type=number] {
-  width: 50px;
+  width: clamp(38px, 10vw, 54px);
   text-align: center;
-  margin: 3px;
-  padding: 4px;
+  padding: clamp(3px, 1vw, 6px);
   border: 1px solid #90caf9;
   border-radius: 4px;
   background: #fff;
+  font-size: clamp(11px, 2.5vw, 14px);
+  font-family: monospace;
+}
+
+/* remove setas dos inputs numéricos em mobile */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number] { -moz-appearance: textfield; }
+
+label {
+  font-size: clamp(11px, 2.5vw, 13px);
+  color: #1565c0;
+}
+
+.botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
 }
 
 button {
-  margin: 8px 4px;
-  padding: 6px 18px;
+  flex: 1 1 120px;
+  padding: clamp(6px, 1.5vw, 10px) clamp(12px, 3vw, 20px);
   background: #fffde7;
   border: 1px solid #f9a825;
   border-radius: 5px;
   color: #5d4037;
   cursor: pointer;
-  font-size: 13px;
+  font-size: clamp(12px, 2.5vw, 14px);
+  font-family: monospace;
 }
 
 button:hover { background: #fff9c4; }
-
-label { font-size: 12px; color: #1565c0; }
 
 .step {
   background: #fffde7;
   border: 1px solid #ffd54f;
   border-radius: 6px;
-  padding: 8px 12px;
+  padding: clamp(6px, 2vw, 10px) clamp(8px, 2.5vw, 14px);
   margin-top: 8px;
   white-space: pre;
-  font-size: 12px;
+  font-size: clamp(10px, 2.2vw, 12px);
+  overflow-x: auto;
 }
 
 .sol {
   background: #e3f2fd;
   border: 1px solid #90caf9;
   border-radius: 6px;
-  padding: 10px 14px;
+  padding: clamp(8px, 2vw, 12px) clamp(10px, 2.5vw, 16px);
   margin-top: 10px;
   color: #0d47a1;
   font-weight: bold;
+  font-size: clamp(12px, 2.5vw, 14px);
+  word-break: break-word;
+}
+
+@media (max-width: 400px) {
+  .sol { display: flex; flex-direction: column; gap: 4px; }
 }
